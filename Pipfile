@@ -8,6 +8,7 @@ langchain = "*"
 python-dotenv = "*"
 pydantic = "*"
 pydantic-settings = "*"
+langchain-openai = "*"
 
 [dev-packages]
 
