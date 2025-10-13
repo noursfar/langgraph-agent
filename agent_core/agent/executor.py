@@ -8,9 +8,9 @@ def run_agent(user_input: str):
     try:
         agent = create_agent()
         log.info("Running agent with user input: %s", user_input)
-        result = agent.run(user_input)
+        result = agent.invoke({"input": user_input})
         log.info("Agent response: %s", result)
-        return {"response": result}
+        return {"response": result['output']}
     except Exception as e:
         log.exception("Agent execution failed: %s", e)
         return {"error": str(e)}
