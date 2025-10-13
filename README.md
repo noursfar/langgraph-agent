@@ -1,93 +1,127 @@
-# llm-agent-lab
+# 🧠 llm-agent-lab
 
+**LLM Agent Lab** is a lightweight proof-of-concept project demonstrating how to build an **LLM-powered agent** that can autonomously decide when to call backend APIs via registered tools.
+This version uses the **LangChain Agent** framework (before migrating to LangGraph), with integrated logging, configuration management, and OAuth authentication.
 
+---
 
-## Getting started
+## 🚀 Project Overview
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+This project explores how to:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+* Build an **LLM agent** that interprets user queries and calls backend APIs dynamically.
+* Integrate **custom Python tools** with precise descriptions and parameter schemas.
+* Log and trace agent reasoning for debugging and monitoring.
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## 🧩 Current Features
+
+| Feature                | Description                                           |
+| ---------------------- | ----------------------------------------------------- |
+| **Agent Architecture** | Modular structure using `agent_core` package          |
+| **Tool Integration**   | Supports async tools registered via `@tool` decorator |
+| **Example Tool**       | `get_pds_contact` – fetches professional contact info |
+| **OAuth Manager**      | Handles token retrieval and caching for API access    |
+| **Config System**      | Pydantic `BaseSettings` for environment variables     |
+| **Logger**             | Centralized logger with configurable log levels       |
+| **CLI Entry**          | Test the agent via terminal with user queries         |
+
+---
+
+## 🧱 Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/noursfar/llm-agent-lab.git
-git branch -M main
-git push -uf origin main
+llm-agent-lab/
+│
+├── Pipfile                  # Environment + dependencies
+├── main.py                  # CLI entrypoint for testing
+│
+└── agent_core/
+    ├── __init__.py
+    │
+    ├── config/
+    │   ├── settings.py       # Pydantic-based settings
+    │
+    ├── utils/
+    │   ├── logger.py         # Centralized logging config
+    │   ├── exceptions.py     # Custom exceptions
+    │   └── oauth_manager.py  # Async OAuth2 token manager
+    │
+    ├── tools/
+    │   ├── get_pds_contact.py # Example LangChain tool
+    │
+    ├── agent/
+    │   ├── base_agent.py     # Agent creation logic
+    │   └── executor.py       # CLI execution and error handling
+    │
+    └── __main__.py           # Optional entry point
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.com/noursfar/llm-agent-lab/-/settings/integrations)
+## ⚙️ Setup Instructions
 
-## Collaborate with your team
+### 1. Clone the repository
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```bash
+git clone git@gitlab.com:your-org/llm-agent-lab.git
+cd llm-agent-lab
+```
 
-## Test and Deploy
+### 2. Setup environment
 
-Use the built-in continuous integration in GitLab.
+```bash
+pip install pipenv
+pipenv install
+pipenv shell
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### 3. Environment variables (`.env`)
 
-***
+```bash
+# Copy example environment file
+cp .env.example .env
 
-# Editing this README
+# Edit with your credentials
+nano .env
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
+## 🧠 Running the Agent
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Interactive mode (CLI)
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+pipenv run main
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Example:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```
+Enter your query: chercher adem daami
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Agent output:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```
+[INFO] Running agent with user input: chercher adem daami
+[INFO] Using tool: get_pds_contact
+Response: Le contact professionnel de Adem Daami a été récupéré avec succès.
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+---
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## 🧭 Roadmap
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+| Phase | Description                                  | Status     |
+| ----- | -------------------------------------------- | ---------- |
+| **1** | Project setup + config/logging               | ✅ Done     |
+| **2** | Implement `get_pds_contact` tool             | ✅ Done     |
+| **3** | Base agent using LangChain                   | ✅ Done     |
+| **4** | Replace deprecated `.run()` with `.invoke()` | ✅ Done     |
+| **5** | Add OAuth Manager                            | ✅ Done     |
+| **6** | Transition to **LangGraph** agent            | 🔜 Next    |
+| **7** | Add multiple tools + registry                | 🔜 Planned |
+| **8** | Integration tests & FastAPI interface        | 🔜 Planned |
