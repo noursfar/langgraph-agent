@@ -1,4 +1,7 @@
 # agent_core/tools/get_pds.py
+import asyncio
+import json
+
 import httpx
 from langchain.tools import tool
 from agent_core.utils.logger import log
@@ -8,7 +11,7 @@ from agent_core.utils.oauth import oauth_manager
 
 
 @tool("get_pds_contact", return_direct=False)
-async def get_pds_contact(input_data):
+def get_pds_contact(input_data):
     """
     Récupère les coordonnées professionnelles d’un professionnel de santé (PDS)
     à partir de son prénom et nom de famille exacts.
@@ -16,6 +19,7 @@ async def get_pds_contact(input_data):
     Args :
         input_data: dictionnaire avec les clés "firstname" and "lastname"
     """
+    input_data = json.loads(input_data)
     firstname = input_data.get("firstname")
     lastname = input_data.get("lastname")
     if not firstname or not lastname:
@@ -24,12 +28,12 @@ async def get_pds_contact(input_data):
     log.info("Fetching PDS contact for: %s %s", firstname, lastname)
 
     try:
-        token = await oauth_manager.get_access_token()
+        token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         url = f"{settings.springboot_healthcare_facility_url}/api/v1/medical-staff?firstname={firstname}&lastname={lastname}"
 
-        async with httpx.AsyncClient(timeout=10) as client:
-            response = await client.get(url, headers=headers)
+        with httpx.Client(timeout=10) as client:
+            response = client.get(url, headers=headers)
             response.raise_for_status()
             data = response.json()
 
