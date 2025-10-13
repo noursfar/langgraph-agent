@@ -116,12 +116,11 @@ Response: Le contact professionnel de Adem Daami a été récupéré avec succè
 ## 🧭 Roadmap
 
 | Phase | Description                                  | Status     |
-| ----- | -------------------------------------------- | ---------- |
+|-------| -------------------------------------------- | ---------- |
 | **1** | Project setup + config/logging               | ✅ Done     |
 | **2** | Implement `get_pds_contact` tool             | ✅ Done     |
 | **3** | Base agent using LangChain                   | ✅ Done     |
-| **4** | Replace deprecated `.run()` with `.invoke()` | ✅ Done     |
-| **5** | Add OAuth Manager                            | ✅ Done     |
-| **6** | Transition to **LangGraph** agent            | 🔜 Next    |
-| **7** | Add multiple tools + registry                | 🔜 Planned |
-| **8** | Integration tests & FastAPI interface        | 🔜 Planned |
+| **4** | Add OAuth Manager                            | ✅ Done     |
+| **5** | Transition to **LangGraph** agent            | 🔜 Next    |
+| **6** | Add multiple tools + registry                | 🔜 Planned |
+| **7** | Integration tests & FastAPI interface        | 🔜 Planned |
