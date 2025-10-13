@@ -15,3 +15,6 @@ langchain-openai = "*"
 [requires]
 python_version = "3.12"
 python_full_version = "3.12.3"
+
+[scripts]
+main = "python -m main"
