@@ -1,9 +1,8 @@
-# agent_core/tools/get_pds.py
-import asyncio
-import json
-
-import httpx
+# agent_core/tools/get_pds_contact.py
+import asyncio, httpx
 from langchain.tools import tool
+
+from agent_core.tools import parse_and_validate_name_input
 from agent_core.utils.logger import log
 from agent_core.config.settings import settings
 from agent_core.utils.exceptions import AgentToolError
@@ -19,12 +18,7 @@ def get_pds_contact(input_data):
     Args :
         input_data: dictionnaire avec les clés "firstname" and "lastname"
     """
-    input_data = json.loads(input_data)
-    firstname = input_data.get("firstname")
-    lastname = input_data.get("lastname")
-    if not firstname or not lastname:
-        raise AgentToolError("Missing 'firstname' or 'lastname' in input_data")
-
+    firstname, lastname = parse_and_validate_name_input(input_data)
     log.info("Fetching PDS contact for: %s %s", firstname, lastname)
 
     try:
@@ -50,18 +44,6 @@ def get_pds_contact(input_data):
 
         return matched_pds
 
-    except httpx.HTTPStatusError as e:
-        log.error(
-            "HTTP error while fetching PDS contact for %s %s: %s",
-            firstname, lastname, str(e)
-        )
-        raise AgentToolError(f"Failed to fetch PDS contact: {e}") from e
-    except httpx.RequestError as e:
-        log.error(
-            "Request error while fetching PDS contact for %s %s: %s",
-            firstname, lastname, str(e)
-        )
-        raise AgentToolError(f"Network error: {e}") from e
     except Exception as e:
         log.exception("Unexpected error fetching PDS contact for %s %s", firstname, lastname)
         raise AgentToolError(f"Unexpected error: {e}") from e
