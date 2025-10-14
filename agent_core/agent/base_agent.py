@@ -2,6 +2,7 @@
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 from agent_core.tools.get_pds_contact import get_pds_contact
+from agent_core.tools.get_patient_data import get_patient_data
 from agent_core.config.settings import settings
 from agent_core.utils.logger import log
 from agent_core.utils.exceptions import AgentToolError
@@ -26,7 +27,7 @@ def create_agent():
         )
 
         # Register tools
-        tools = [get_pds_contact]
+        tools = [get_pds_contact, get_patient_data]
 
         # Initialize LangChain agent with function-calling capabilities
         agent = initialize_agent(
