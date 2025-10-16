@@ -37,6 +37,8 @@ def create_agent():
             verbose=True,
             handle_parsing_errors=True,
         )
+        breakpoint()
+        #agent.agent.llm_chain.prompt.template  agent.agent.llm_chain.prompt
 
         log.info("Agent initialized successfully with %d tool(s).", len(tools))
         return agent
