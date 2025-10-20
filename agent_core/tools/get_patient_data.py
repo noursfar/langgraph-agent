@@ -1,25 +1,13 @@
 # agent_core/tools/get_patient_data.py
 import asyncio, httpx
-from langchain.tools import tool
-
-from agent_core.tools import parse_and_validate_name_input
+from langchain_core.tools import StructuredTool
 from agent_core.utils.logger import log
 from agent_core.config.settings import settings
 from agent_core.utils.exceptions import AgentToolError
 from agent_core.utils.oauth import oauth_manager
 
 
-@tool("get_patient_data", return_direct=False)
-def get_patient_data(input_data):
-    """
-    Récupère les informations d’un patient spécifique à partir de son prénom et nom exacts.
-
-    Args:
-        input_data (str): dictionnaire contenant les clés "firstname" et "lastname".
-    """
-    firstname, lastname = parse_and_validate_name_input(input_data)
-    log.info("Fetching PDS contact for: %s %s", firstname, lastname)
-
+def fetch_patient_data(firstname, lastname):
     try:
         token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
@@ -74,3 +62,14 @@ def get_patient_data(input_data):
     except Exception as e:
         log.exception("Unexpected error fetching patient data for %s %s", firstname, lastname)
         raise AgentToolError(f"Unexpected error: {e}") from e
+
+
+get_patient_data_tool = StructuredTool.from_function(
+    func=fetch_patient_data,
+    name="get_patient_data",
+    description="Récupère les informations d’un patient spécifique à partir de son prénom et nom exacts.",
+    input_schema={"type": "object", "properties": {
+        "firstname": {"type": "string", "description": "Prénom exact du patient"},
+        "lastname": {"type": "string", "description": "Nom de famille exact du patient"}
+    }, "required": ["firstname", "lastname"]}
+)
