@@ -4,11 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-langchain = "*"
 python-dotenv = "*"
 pydantic = "*"
 pydantic-settings = "*"
 langchain-openai = "*"
+langgraph = "*"
+langchain-core = "*"
+langchain = "*"
 
 [dev-packages]
 

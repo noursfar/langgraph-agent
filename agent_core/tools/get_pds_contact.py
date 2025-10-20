@@ -1,32 +1,13 @@
-# agent_core/tools/get_pds.py
-import asyncio
-import json
-
-import httpx
-from langchain.tools import tool
+# agent_core/tools/get_pds_contact.py
+import asyncio, httpx
+from langchain_core.tools import StructuredTool
 from agent_core.utils.logger import log
 from agent_core.config.settings import settings
 from agent_core.utils.exceptions import AgentToolError
 from agent_core.utils.oauth import oauth_manager
 
 
-@tool("get_pds_contact", return_direct=False)
-def get_pds_contact(input_data):
-    """
-    Récupère les coordonnées professionnelles d’un professionnel de santé (PDS)
-    à partir de son prénom et nom de famille exacts.
-
-    Args :
-        input_data: dictionnaire avec les clés "firstname" and "lastname"
-    """
-    input_data = json.loads(input_data)
-    firstname = input_data.get("firstname")
-    lastname = input_data.get("lastname")
-    if not firstname or not lastname:
-        raise AgentToolError("Missing 'firstname' or 'lastname' in input_data")
-
-    log.info("Fetching PDS contact for: %s %s", firstname, lastname)
-
+def fetch_pds_contact(firstname, lastname):
     try:
         token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
@@ -50,18 +31,17 @@ def get_pds_contact(input_data):
 
         return matched_pds
 
-    except httpx.HTTPStatusError as e:
-        log.error(
-            "HTTP error while fetching PDS contact for %s %s: %s",
-            firstname, lastname, str(e)
-        )
-        raise AgentToolError(f"Failed to fetch PDS contact: {e}") from e
-    except httpx.RequestError as e:
-        log.error(
-            "Request error while fetching PDS contact for %s %s: %s",
-            firstname, lastname, str(e)
-        )
-        raise AgentToolError(f"Network error: {e}") from e
     except Exception as e:
         log.exception("Unexpected error fetching PDS contact for %s %s", firstname, lastname)
         raise AgentToolError(f"Unexpected error: {e}") from e
+
+
+get_pds_contact_tool = StructuredTool.from_function(
+    func=fetch_pds_contact,
+    name="get_pds_contact",
+    description="Récupère les coordonnées professionnelles d’un PDS à partir de son prénom et nom de famille exacts.",
+    input_schema={"type": "object", "properties": {
+        "firstname": {"type": "string", "description": "Prénom exact du PDS"},
+        "lastname": {"type": "string", "description": "Nom de famille exact du PDS"}
+    }, "required": ["firstname", "lastname"]}
+)
