@@ -11,6 +11,10 @@ langchain-openai = "*"
 langgraph = "*"
 langchain-core = "*"
 langchain = "*"
+chromadb = "*"
+langchain-chroma = "*"
+pypdf = "*"
+python-docx = "*"
 
 [dev-packages]
 
