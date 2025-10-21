@@ -15,3 +15,11 @@ class AgentToolError(LlmAgentError):
 class AuthenticationError(LlmAgentError):
     """Custom exception raised when a token generation fails."""
     pass
+
+
+class IngestionError(LlmAgentError):
+    pass
+
+
+class VectorStoreError(LlmAgentError):
+    pass
