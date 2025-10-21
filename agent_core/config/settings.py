@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     openai_api_key: str
     log_level: str = "INFO"
     model_name: str = "gpt-4.1-mini"
+    embedding_model: str = "text-embedding-ada-002"
 
     # API URLs
     springboot_healthcare_facility_url: str = "https://prod.nearcare-app.com/healthcare-facility-ms"

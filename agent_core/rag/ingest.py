@@ -5,7 +5,7 @@ from langchain_openai import OpenAIEmbeddings
 from agent_core.rag.vector_store import VectorStore
 
 from agent_core.config.settings import settings
-from agent_core.rag.config import CHUNK_SIZE, CHUNK_OVERLAP, EMBEDDING_MODEL
+from agent_core.rag.config import CHUNK_SIZE, CHUNK_OVERLAP
 from agent_core.utils.exceptions import IngestionError
 
 
@@ -33,7 +33,7 @@ def ingest_document(file_path, collection_name="medical_documents"):
 
         # Generate embeddings using OpenAI
         embeddings_model = OpenAIEmbeddings(
-            model=EMBEDDING_MODEL,
+            model=settings.embedding_model,
             api_key=settings.openai_api_key
         )
         texts = [chunk.page_content for chunk in chunks]
