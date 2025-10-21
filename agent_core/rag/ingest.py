@@ -9,8 +9,16 @@ from agent_core.rag.config import CHUNK_SIZE, CHUNK_OVERLAP, EMBEDDING_MODEL
 from agent_core.utils.exceptions import IngestionError
 
 
-def ingest_document(file_path):
+def ingest_document(file_path, collection_name="medical_documents"):
     try:
+        # Initialize vector store
+        vector_store = VectorStore(collection_name)
+
+        # Check if file_path already exists in the collection
+        existing_sources = vector_store.list_sources()
+        if file_path in existing_sources:
+            raise IngestionError(f"File {file_path} already ingested in collection {collection_name}")
+
         # Load document
         loader = PyPDFLoader(file_path)
         docs = loader.load()
@@ -32,7 +40,6 @@ def ingest_document(file_path):
         embeddings = embeddings_model.embed_documents(texts)
 
         # Store in vector DB
-        vector_store = VectorStore()
         vector_store.add_documents(chunks, embeddings, file_path)
     except Exception as e:
         raise IngestionError(f"Failed to ingest {file_path}: {str(e)}")
