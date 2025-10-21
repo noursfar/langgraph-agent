@@ -43,26 +43,21 @@ def retrieve_admin_info(question, collection="medical_documents"):
         raise AgentToolError(f"RAG query failed: {str(e)}") from e
 
 
-def create_retrieve_admin_info_tool():
-    def _wrapper(user_query: str):
-        """Wrapper ensuring that we inject the raw query directly."""
-        return retrieve_admin_info(user_query)
-
-    return StructuredTool.from_function(
-        func=_wrapper,
-        name="retrieve_admin_info",
-        description=(
-            "Retrieve administrative information directly from official documents stored in the RAG system. "
-            "This tool always uses the *exact* user query, without reformulation."
-        ),
-        input_schema={
-            "type": "object",
-            "properties": {
-                "user_query": {
-                    "type": "string",
-                    "description": "Raw user question (in original form)."
-                }
-            },
-            "required": ["user_query"]
-        }
-    )
+retrieve_admin_info_tool = StructuredTool.from_function(
+    func=retrieve_admin_info,
+    name="retrieve_admin_info",
+    description=(
+        "Récupère les informations nécessaires à partir des documents officiels "
+        "stockés dans la base vectorielle (RAG). Utilisé lorsque l'utilisateur pose une question administrative."
+    ),
+    input_schema={
+        "type": "object",
+        "properties": {
+            "question": {
+                "type": "string",
+                "description": "Question de l'utilisateur sur un sujet administratif ou documentaire."
+            }
+        },
+        "required": ["question"]
+    }
+)

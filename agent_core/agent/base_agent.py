@@ -10,6 +10,7 @@ from langgraph.graph.message import add_messages
 
 from agent_core.tools.get_pds_contact import get_pds_contact_tool
 from agent_core.tools.get_patient_data import get_patient_data_tool
+from agent_core.tools.rag_query import retrieve_admin_info_tool
 from agent_core.config.settings import settings
 from agent_core.utils.logger import log
 from agent_core.utils.exceptions import AgentToolError
@@ -38,7 +39,7 @@ def create_agent():
         )
 
         # Register tools
-        tools = [get_pds_contact_tool, get_patient_data_tool]
+        tools = [get_pds_contact_tool, get_patient_data_tool, retrieve_admin_info_tool]
 
         # Bind tools to the LLM
         llm_with_tools = llm.bind_tools(tools)
