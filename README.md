@@ -1,31 +1,33 @@
 # 🧠 llm-agent-lab
 
-**LLM Agent Lab** is a lightweight proof-of-concept project demonstrating how to build an **LLM-powered agent** that can autonomously decide when to call backend APIs via registered tools.
-This version uses the **LangChain Agent** framework (before migrating to LangGraph), with integrated logging, configuration management, and OAuth authentication.
+**LLM Agent Lab** is a production-ready AI agent built with **LangGraph** that autonomously decides when to call backend APIs and search through document knowledge bases. The agent integrates **RAG (Retrieval-Augmented Generation)** for medical document search, OAuth authentication for healthcare APIs, and structured tool calling.
 
 ---
 
 ## 🚀 Project Overview
 
-This project explores how to:
-
-* Build an **LLM agent** that interprets user queries and calls backend APIs dynamically.
-* Integrate **custom Python tools** with precise descriptions and parameter schemas.
-* Log and trace agent reasoning for debugging and monitoring.
+This project demonstrates:
+* Building an **LLM agent with LangGraph** that interprets user queries and executes tools dynamically
+* **RAG pipeline** for semantic search across documents 
+* **Custom tool integration** with precise descriptions and parameter schemas
+* **OAuth2 authentication** for secure API access
+* **Conversation memory** for multi-turn interactions
+* Structured logging and error handling
 
 ---
 
-## 🧩 Current Features
+## 🧩 Key Features
 
-| Feature                | Description                                           |
-| ---------------------- | ----------------------------------------------------- |
-| **Agent Architecture** | Modular structure using `agent_core` package          |
-| **Tool Integration**   | Supports async tools registered via `@tool` decorator |
-| **Example Tool**       | `get_pds_contact` – fetches professional contact info |
-| **OAuth Manager**      | Handles token retrieval and caching for API access    |
-| **Config System**      | Pydantic `BaseSettings` for environment variables     |
-| **Logger**             | Centralized logger with configurable log levels       |
-| **CLI Entry**          | Test the agent via terminal with user queries         |
+| Feature | Description                                                                                           |
+|---------|-------------------------------------------------------------------------------------------------------|
+| **LangGraph Agent** | Modern state-based agent with custom workflow control                                                 |
+| **RAG System** | Document ingestion, embedding, and semantic search with ChromaDB                                      |
+| **Tools** | `get_patient_data`, `get_pds_contact` -`retrieve_admin_info` |
+| **OAuth Manager** | Async token retrieval and caching for API authentication                                              |
+| **Token-based Chunking** | Uses tiktoken for precise token-level document splitting                                              |
+| **OpenAI Embeddings** | text-embedding-ada-002 for high-quality semantic search                                               |
+| **Conversation Memory** | Maintains context across multi-turn conversations                                                     |
+| **CLI Interface** | Interactive chat interface for testing                                                                |
 
 ---
 
@@ -34,28 +36,43 @@ This project explores how to:
 ```
 llm-agent-lab/
 │
-├── Pipfile                  # Environment + dependencies
-├── main.py                  # CLI entrypoint for testing
+├── Pipfile                      # Dependencies
+├── main.py                      # Interactive CLI interface
+├── README.md
 │
-└── agent_core/
-    ├── __init__.py
-    │
-    ├── config/
-    │   ├── settings.py       # Pydantic-based settings
-    │
-    ├── utils/
-    │   ├── logger.py         # Centralized logging config
-    │   ├── exceptions.py     # Custom exceptions
-    │   └── oauth_manager.py  # Async OAuth2 token manager
-    │
-    ├── tools/
-    │   ├── get_pds_contact.py # Example LangChain tool
-    │
-    ├── agent/
-    │   ├── base_agent.py     # Agent creation logic
-    │   └── executor.py       # CLI execution and error handling
-    │
-    └── __main__.py           # Optional entry point
+├── agent_core/
+│   ├── __init__.py
+│   │
+│   ├── config/
+│   │   └── settings.py          # Environment configuration
+│   │
+│   ├── utils/
+│   │   ├── logger.py            # Centralized logging
+│   │   ├── exceptions.py        # Custom exceptions
+│   │   └── oauth.py             # OAuth2 token manager
+│   │
+│   ├── tools/
+│   │   ├── get_patient_data.py  # Fetch patient information
+│   │   ├── get_pds_contact.py   # Fetch healthcare professional contacts
+│   │   └── rag_search.py        # Search medical documents (RAG)
+│   │
+│   ├── agent/
+│   │   ├── base_agent.py        # LangGraph agent definition
+│   │   └── executor.py          # Agent execution logic
+│   │
+│   └── rag/                     # RAG backend
+│       ├── config.py            # RAG-specific configuration
+│       ├── vector_store.py      # ChromaDB interface
+│       └── ingest.py            # Document processing pipeline
+│
+├── scripts/                     # CLI for testing 
+│   ├── reset_vector_db.py
+│   ├── inspect_vs.py
+│   └── ingest_docs.py           
+│
+└── data/
+    ├── documents/               # Source documents
+    └── chroma_db/               # ChromaDB vector store
 ```
 
 ---
@@ -80,12 +97,28 @@ pipenv shell
 ### 3. Environment variables (`.env`)
 
 ```bash
-# Copy example environment file
 cp .env.example .env
-
-# Edit with your credentials
-nano .env
 ```
+
+---
+
+## 📚 RAG Setup
+
+### 1. Add documents to ingest
+
+Place your medical documents in `data/documents/`:
+
+### 2. Ingest documents
+
+```bash
+python -m scripts.ingest_docs data/documents/livretaccueilpatient.pdf
+```
+
+This will:
+- Load the document using LangChain loaders
+- Split into chunks using `TokenTextSplitter` (tiktoken)
+- Generate embeddings with OpenAI `text-embedding-ada-002`
+- Store in ChromaDB at `data/chroma_db/`
 
 ---
 
@@ -96,31 +129,40 @@ nano .env
 ```bash
 pipenv run main
 ```
+🧠 LLM Agent Lab - LangGraph Agent Starting...
 
-Example:
+Enter your query (or 'quit' to exit): Quels sont les protocoles d'admission?
 
-```
-Enter your query: chercher adem daami
-```
+🤖 Agent Output:
+Selon le livret d'accueil patient, les protocoles d'admission incluent...
 
-Agent output:
 
-```
-[INFO] Running agent with user input: chercher adem daami
-[INFO] Using tool: get_pds_contact
-Response: Le contact professionnel de Adem Daami a été récupéré avec succès.
-```
+### How the agent works:
+
+1. **User query** → Agent analyzes intent
+2. **Tool selection** → Agent decides which tool(s) to use:
+   - `get_patient_data` - for patient information
+   - `get_pds_contact` - for staff contacts
+   - `search_documents` - for medical protocols
+3. **Tool execution** → Fetches data from APIs or searches documents
+4. **Response generation** → Synthesizes results into natural language
+
 
 ---
 
-## 🧭 Roadmap
+## 🧭 Development Roadmap
+| Phase | Description | Status |
+|-------|------------|--------|
+| **1** | Project setup + config/logging | ✅ Done |
+| **2** | Implement healthcare API tools | ✅ Done |
+| **3** | Migrate to LangGraph | ✅ Done |
+| **4** | Add OAuth Manager | ✅ Done |
+| **5** | RAG pipeline with ChromaDB | ✅ Done |
+| **6** | Multi-turn conversation memory | ✅ Done |
+| **7** | Document ingestion CLI | ✅ Done |
+| **8** | Prompting | 🔜 Next |
+| **9** | Agent personalization (context injection) | 🔜 Next |
+| **10** | FastAPI REST endpoints | 🔜 Planned |
+| **11** | Conversation persistence (PostgreSQL) | 🔜 Planned |
+| **12** | Integration tests & CI/CD | 🔜 Planned |
 
-| Phase | Description                                  | Status     |
-|-------| -------------------------------------------- | ---------- |
-| **1** | Project setup + config/logging               | ✅ Done     |
-| **2** | Implement `get_pds_contact` tool             | ✅ Done     |
-| **3** | Base agent using LangChain                   | ✅ Done     |
-| **4** | Add OAuth Manager                            | ✅ Done     |
-| **5** | Transition to **LangGraph** agent            | 🔜 Next    |
-| **6** | Add multiple tools + registry                | 🔜 Planned |
-| **7** | Integration tests & FastAPI interface        | 🔜 Planned |

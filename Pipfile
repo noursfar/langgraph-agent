@@ -7,10 +7,16 @@ name = "pypi"
 python-dotenv = "*"
 pydantic = "*"
 pydantic-settings = "*"
-langchain-openai = "*"
 langgraph = "*"
 langchain-core = "*"
 langchain = "*"
+chromadb = "*"
+langchain-chroma = "*"
+pypdf = "*"
+python-docx = "*"
+langchain-community = "*"
+langchain-text-splitters = "*"
+langchain-openai = "*"
 
 [dev-packages]
 
