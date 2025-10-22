@@ -5,7 +5,7 @@ from agent_core.utils.exceptions import ContextBuildError
 from agent_core.utils.logger import log
 
 
-def build_context_prompt(pds_id):
+def build_context_prompt(pds_id = 269):
     """ Build a rich contextual prompt for the PDS assistant."""
     try:
         # Fetch PDS, rooms, and planned entries
