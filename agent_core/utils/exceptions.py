@@ -23,3 +23,8 @@ class IngestionError(LlmAgentError):
 
 class VectorStoreError(LlmAgentError):
     pass
+
+
+class ContextBuildError(LlmAgentError):
+    """Raised when building the context prompt fails."""
+    pass
