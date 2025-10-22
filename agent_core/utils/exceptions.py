@@ -28,3 +28,4 @@ class VectorStoreError(LlmAgentError):
 class ContextBuildError(LlmAgentError):
     """Raised when building the context prompt fails."""
     pass
+
