@@ -48,7 +48,8 @@ retrieve_admin_info_tool = StructuredTool.from_function(
     name="retrieve_admin_info",
     description=(
         "Récupère les informations nécessaires à partir des documents officiels "
-        "stockés dans la base vectorielle (RAG). Utilisé lorsque l'utilisateur pose une question administrative."
+        "stockés dans la base vectorielle (RAG). Utilisé lorsque l'utilisateur pose une question administrative"
+        ", logestique ou de protocoles."
     ),
     input_schema={
         "type": "object",
