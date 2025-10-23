@@ -9,13 +9,6 @@ from agent_core.config.settings import settings
 
 
 def get_pds(pds_id):
-    """
-    Fetch detailed info about a PDS (medical staff) by ID.
-
-    Returns:
-        Tuple[str, list[str], list[str]]: JSON string of extracted data,
-                                          list of sector names, list of sector IDs
-    """
     try:
         token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
@@ -55,16 +48,10 @@ def get_pds(pds_id):
 
 
 def get_rooms():
-    """
-    Retrieve available and occupied rooms for the current user.
-
-    Returns:
-        Tuple[list[str], list[str]]: available_rooms, occupied_rooms
-    """
     try:
         token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-        url = f"{settings.springboot_healthcare_facility_url}/api/v1/pathways-medicals-staff/onlyMySector"
+        url = f"{settings.springboot_healthcare_url}/api/v1/pathways-medicals-staff/onlyMySector"
 
         with httpx.Client(timeout=10) as client:
             response = client.get(url, headers=headers)
@@ -107,16 +94,10 @@ def get_rooms():
 
 
 def get_planned_entries(hr_id):
-    """
-    Fetch planned entries for today for a given healthcare staff ID.
-
-    Returns:
-        List[dict]: Each dict contains fullname, service, entryDate
-    """
     try:
         token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-        url = f"{settings.springboot_healthcare_facility_url}/api/v1/planned-entries/today"
+        url = f"{settings.springboot_healthcare_url}/api/v1/planned-entries/today"
         params = {"id": hr_id}
 
         with httpx.Client(timeout=10) as client:

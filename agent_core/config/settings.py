@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     # API URLs
     springboot_healthcare_facility_url: str = "https://prod.nearcare-app.com/healthcare-facility-ms"
+    springboot_healthcare_url: str = "https://prod.nearcare-app.com/healthcare-ms"
     nearcare_oauth_url: str = "https://prod.nearcare-app.com/oauth2-ms/oauth/token"
 
     # OAuth2 Credentials

@@ -63,7 +63,7 @@ def create_agent():
         # Define the function that calls the model
         def call_model(state: AgentState):
             """Call the LLM with the current state + composed prompt."""
-            messages = compose_prompt(state["messages"])
+            messages = compose_prompt(state["messages"], 269)
             response = llm_with_tools.invoke(messages)
             # Return the response which will be added to messages
             return {"messages": [response]}
