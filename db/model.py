@@ -1,4 +1,5 @@
 # db/model.py
+from sqlalchemy.ext.mutable import MutableList
 from db import db
 from datetime import datetime, timezone
 
@@ -10,10 +11,10 @@ class Conversation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    hr_id = db.column(db.String(100), nullable=False)
+    hr_id = db.Column(db.String(100), nullable=False)
     pds_id = db.Column(db.String(100), nullable=False)
 
-    full_history = db.Column(db.JSON, nullable=True)
+    full_history = db.Column(MutableList.as_mutable(db.JSON), nullable=False)
 
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
