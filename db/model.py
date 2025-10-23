@@ -19,5 +19,10 @@ class Conversation(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
+    def save(self):
+        """Save the conversation to the database"""
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return f"<Conversation id={self.id} pds_id={self.pds_id} hr_id={self.hr_id}>"
