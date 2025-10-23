@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     springboot_healthcare_url: str = "https://prod.nearcare-app.com/healthcare-ms"
     nearcare_oauth_url: str = "https://prod.nearcare-app.com/oauth2-ms/oauth/token"
 
+    # Database configuration
+    local_db_url: str
+
     # OAuth2 Credentials
     oauth_client_id: str
     oauth_client_secret: str
