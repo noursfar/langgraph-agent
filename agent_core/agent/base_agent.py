@@ -8,6 +8,7 @@ from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langgraph.graph.message import add_messages
 
+from agent_core.prompts.formatter import compose_prompt
 from agent_core.tools.get_pds_contact import get_pds_contact_tool
 from agent_core.tools.get_patient_data import get_patient_data_tool
 from agent_core.tools.rag_query import retrieve_admin_info_tool
@@ -61,8 +62,8 @@ def create_agent():
 
         # Define the function that calls the model
         def call_model(state: AgentState):
-            """Call the LLM with the current state."""
-            messages = state["messages"]
+            """Call the LLM with the current state + composed prompt."""
+            messages = compose_prompt(state["messages"], 269)
             response = llm_with_tools.invoke(messages)
             # Return the response which will be added to messages
             return {"messages": [response]}
