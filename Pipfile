@@ -19,6 +19,9 @@ langchain-text-splitters = "*"
 langchain-openai = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
+flask-cors = "*"
+flask = "*"
+flask-smorest = "*"
 
 [dev-packages]
 
