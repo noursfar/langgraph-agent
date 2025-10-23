@@ -19,6 +19,7 @@ langchain-text-splitters = "*"
 langchain-openai = "*"
 flask-sqlalchemy = "*"
 datetime = "*"
+alembic = "*"
 
 [dev-packages]
 
