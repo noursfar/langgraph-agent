@@ -37,6 +37,6 @@ def initialize_session():
         return jsonify(response.model_dump()), 500
 
 
-@initialize_bp.route('/initialize', methods=['GET'])
+@initialize_bp.route('/v1/pds/initialize', methods=['GET'])
 def initialize_get():
     return jsonify({"error": "Method not allowed, use POST"}), 405

@@ -17,3 +17,21 @@ class InitializeResponse(BaseModel):
                 "error": None
             }
         }
+
+
+class ChatResponse(BaseModel):
+    """Response schema for chat messages."""
+    success: bool = Field(..., description="Whether the operation succeeded")
+    response: Optional[str] = Field(None, description="Agent's response message")
+    session_id: Optional[str] = Field(None, description="Session ID")
+    error: Optional[str] = Field(None, description="Error message if failed")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "response": "Selon le livret d'accueil patient, les protocoles d'admission incluent...",
+                "session_id": "550e8400-e29b-41d4-a716-446655440000",
+                "error": None
+            }
+        }

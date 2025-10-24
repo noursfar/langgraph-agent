@@ -10,7 +10,19 @@ class InitializeRequest(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "user_id": "user_123",
+                "userId": "user_123",
                 "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            }
+        }
+
+
+class ChatRequest(BaseModel):
+    """Request schema for sending a message to the agent."""
+    message: str = Field(..., description="User's message/query")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "message": "Quels sont les protocoles d'admission?"
             }
         }
