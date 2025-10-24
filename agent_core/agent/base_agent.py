@@ -8,6 +8,7 @@ from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langgraph.graph.message import add_messages
 
+from agent_core.prompts.context_prompt import build_context_prompt
 from agent_core.prompts.formatter import compose_prompt
 from agent_core.tools.get_pds_contact import get_pds_contact_tool
 from agent_core.tools.get_patient_data import get_patient_data_tool
@@ -32,7 +33,9 @@ def create_agent(pds_id, token):
     try:
         log.info("Initializing LangGraph agent with model: %s", settings.model_name)
 
-        # Initialize OpenAI LLM with tool binding
+        context_prompt = build_context_prompt(pds_id, token)
+        log.debug("Context prompt built during initialization")
+
         llm = ChatOpenAI(
             model=settings.model_name,
             temperature=0,
@@ -62,8 +65,7 @@ def create_agent(pds_id, token):
 
         # Define the function that calls the model
         def call_model(state: AgentState):
-            """Call the LLM with the current state + composed prompt."""
-            messages = compose_prompt(state["messages"], pds_id, token)
+            messages = compose_prompt(state["messages"], context_prompt)
             response = llm_with_tools.invoke(messages)
             # Return the response which will be added to messages
             return {"messages": [response]}
@@ -82,10 +84,7 @@ def create_agent(pds_id, token):
         workflow.add_conditional_edges(
             "agent",
             should_continue,
-            {
-                "continue": "tools",
-                "end": END,
-            },
+            {"continue": "tools", "end": END},
         )
 
         # Add edge from tools back to agent
