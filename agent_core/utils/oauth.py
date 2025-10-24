@@ -55,16 +55,8 @@ class OAuthManager:
                 )
                 return self.access_token
 
-        except httpx.HTTPStatusError as e:
-            msg = f"OAuth authentication failed: {e.response.status_code} - {e.response.text}"
-            log.error(msg)
-            raise AuthenticationError(msg) from e
-        except httpx.RequestError as e:
-            msg = f"OAuth request failed: {str(e)}"
-            log.error(msg)
-            raise AuthenticationError(msg) from e
-        except KeyError as e:
-            msg = f"Invalid OAuth response: missing {str(e)}"
+        except (httpx.HTTPStatusError, httpx.RequestError, KeyError) as e:
+            msg = f"OAuth error: {str(e)}"
             log.error(msg)
             raise AuthenticationError(msg) from e
 
