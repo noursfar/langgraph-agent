@@ -22,12 +22,14 @@ This project demonstrates:
 |---------|-------------------------------------------------------------------------------------------------------|
 | **LangGraph Agent** | Modern state-based agent with custom workflow control                                                 |
 | **RAG System** | Document ingestion, embedding, and semantic search with ChromaDB                                      |
-| **Tools** | `get_patient_data`, `get_pds_contact` -`retrieve_admin_info` |
+| **Tools** | `get_patient_data`, `get_pds_contact`, `retrieve_admin_info` |
 | **OAuth Manager** | Async token retrieval and caching for API authentication                                              |
 | **Token-based Chunking** | Uses tiktoken for precise token-level document splitting                                              |
 | **OpenAI Embeddings** | text-embedding-ada-002 for high-quality semantic search                                               |
-| **Conversation Memory** | Maintains context across multi-turn conversations                                                     |
-| **CLI Interface** | Interactive chat interface for testing                                                                |
+| **Conversation Memory** | SQL-based persistent conversation history across sessions                                              |
+| **CLI Interface** | Interactive chat interface with session management                                                    |
+| **REST API** | Flask-based REST API with OpenAPI documentation                                                       |
+| **Session Management** | UUID-based session tracking for multi-user support                                                  |
 
 ---
 
@@ -38,7 +40,18 @@ llm-agent-lab/
 │
 ├── Pipfile                      # Dependencies
 ├── main.py                      # Interactive CLI interface
+├── app.py                       # Flask REST API server
 ├── README.md
+│
+├── api/                         # REST API implementation
+│   ├── routes/
+│   │   ├── chat.py             # Chat endpoint handlers
+│   │   └── initialize.py        # Session initialization
+│   ├── schemas/
+│   │   ├── requests.py         # Request validation schemas
+│   │   └── responses.py        # Response schemas
+│   └── utils/
+│       └── agent_store.py      # Session management
 │
 ├── agent_core/
 │   ├── __init__.py
@@ -124,6 +137,37 @@ This will:
 
 ## 🧠 Running the Agent
 
+### REST API Mode
+
+```bash
+pipenv run app
+```
+
+The server will start at `http://localhost:5000` with the following endpoints:
+
+#### 1. Initialize Session
+- **Endpoint**: `POST /api/v1/pds/initialize`
+- **Description**: Creates a new conversation session
+- **Request Body**:
+  ```json
+  {
+    "userId": "user_123",
+    "token": "your_auth_token"
+  }
+  ```
+
+#### 2. Chat
+- **Endpoint**: `POST /api/v1/pds/chat/<session_id>`
+- **Description**: Send a message to the agent
+- **Request Body**:
+  ```json
+  {
+    "message": "Quels sont les protocoles d'admission?"
+  }
+  ```
+
+API documentation is available at `/swagger-ui`.
+
 ### Interactive mode (CLI)
 
 ```bash
@@ -162,7 +206,9 @@ Selon le livret d'accueil patient, les protocoles d'admission incluent...
 | **7** | Document ingestion CLI | ✅ Done |
 | **8** | Prompting | 🔜 Next |
 | **9** | Agent personalization (context injection) | 🔜 Next |
-| **10** | FastAPI REST endpoints | 🔜 Planned |
-| **11** | Conversation persistence (PostgreSQL) | 🔜 Planned |
+| **10** | REST API with Flask | ✅ Done |
+| **11** | Conversation persistence (PostgreSQL) | ✅ Done |
 | **12** | Integration tests & CI/CD | 🔜 Planned |
+| **13** | API Documentation & Swagger UI | ✅ Done |
+| **14** | Session Management & Multi-user Support | ✅ Done |
 
