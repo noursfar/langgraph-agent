@@ -34,9 +34,9 @@ class OAuthManager:
                     settings.nearcare_oauth_url,
                     headers={"Content-Type": "application/x-www-form-urlencoded"},
                     data={
-                        "client_id": settings.oauth_client_id,
-                        "client_secret": settings.oauth_client_secret,
-                        "grant_type": settings.oauth_grant_type,
+                        "client_id": settings.CLIENT_ID,
+                        "client_secret": settings.CLIENT_SECRET,
+                        "grant_type": "client_credentials",
                     },
                 )
                 response.raise_for_status()
