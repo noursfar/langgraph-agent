@@ -8,9 +8,8 @@ from agent_core.utils.exceptions import AgentToolError
 from agent_core.config.settings import settings
 
 
-def get_pds(pds_id):
+def get_pds(pds_id, token):
     try:
-        token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         url = f"{settings.springboot_healthcare_facility_url}/api/v1/medical-staff/{pds_id}"
 
@@ -47,9 +46,8 @@ def get_pds(pds_id):
         raise AgentToolError(f"Failed to fetch PDS data: {e}") from e
 
 
-def get_rooms():
+def get_rooms(token):
     try:
-        token = asyncio.run(oauth_manager.get_access_token())
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         url = f"{settings.springboot_healthcare_url}/api/v1/pathways-medicals-staff/onlyMySector"
 

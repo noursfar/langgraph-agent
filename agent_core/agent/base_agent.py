@@ -22,7 +22,7 @@ class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
 
 
-def create_agent():
+def create_agent(pds_id, token):
     """
     Initialize the LangGraph agent with registered tools.
 
@@ -63,7 +63,7 @@ def create_agent():
         # Define the function that calls the model
         def call_model(state: AgentState):
             """Call the LLM with the current state + composed prompt."""
-            messages = compose_prompt(state["messages"], 269)
+            messages = compose_prompt(state["messages"], pds_id, token)
             response = llm_with_tools.invoke(messages)
             # Return the response which will be added to messages
             return {"messages": [response]}

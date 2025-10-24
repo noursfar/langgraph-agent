@@ -36,8 +36,6 @@ class OAuthManager:
                     data={
                         "client_id": settings.oauth_client_id,
                         "client_secret": settings.oauth_client_secret,
-                        "username": settings.oauth_username,
-                        "password": settings.oauth_password,
                         "grant_type": settings.oauth_grant_type,
                     },
                 )

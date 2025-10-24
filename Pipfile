@@ -31,3 +31,4 @@ python_full_version = "3.12.3"
 
 [scripts]
 main = "python -m main"
+app  = "python -m app"

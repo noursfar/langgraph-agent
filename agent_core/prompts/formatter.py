@@ -6,9 +6,9 @@ from agent_core.prompts.context_prompt import build_context_prompt
 from agent_core.utils.exceptions import ContextBuildError
 from agent_core.utils.logger import log
 
-def compose_prompt(messages, pds_id):
+def compose_prompt(messages, pds_id, token):
     try:
-        system_context = build_context_prompt(pds_id)
+        system_context = build_context_prompt(pds_id, token)
     except ContextBuildError as e:
         log.error(f"Failed to build system context prompt: {e}")
         system_context = ""

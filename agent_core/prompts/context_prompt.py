@@ -5,12 +5,12 @@ from agent_core.utils.exceptions import ContextBuildError
 from agent_core.utils.logger import log
 
 
-def build_context_prompt(pds_id = 269):
+def build_context_prompt(pds_id, token):
     """ Build a rich contextual prompt for the PDS assistant."""
     try:
         # Fetch PDS, rooms, and planned entries
-        pds_json, sectors_names, _ = get_pds(pds_id)
-        available_rooms, occupied_rooms = get_rooms()
+        pds_json, sectors_names, _ = get_pds(pds_id, token)
+        available_rooms, occupied_rooms = get_rooms(token)
 
         pds_info = json.loads(pds_json)
         hr_id = pds_info["healthcare_facility_id"]
