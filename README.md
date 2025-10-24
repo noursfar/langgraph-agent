@@ -204,8 +204,8 @@ Selon le livret d'accueil patient, les protocoles d'admission incluent...
 | **5** | RAG pipeline with ChromaDB | ✅ Done |
 | **6** | Multi-turn conversation memory | ✅ Done |
 | **7** | Document ingestion CLI | ✅ Done |
-| **8** | Prompting | 🔜 Next |
-| **9** | Agent personalization (context injection) | 🔜 Next |
+| **8** | Prompting | ✅ Done |
+| **9** | Agent personalization (context injection) | ✅ Done |
 | **10** | REST API with Flask | ✅ Done |
 | **11** | Conversation persistence (PostgreSQL) | ✅ Done |
 | **12** | Integration tests & CI/CD | 🔜 Planned |
