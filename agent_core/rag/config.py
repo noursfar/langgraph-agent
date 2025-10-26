@@ -14,6 +14,3 @@ CHROMA_PERSIST_DIR.mkdir(parents=True, exist_ok=True)
 
 CHUNK_SIZE = 800  # Characters per chunk (roughly 200 tokens)
 CHUNK_OVERLAP = 200  # Overlap between chunks to preserve context
-
-
-COLLECTION_NAME = "medical_documents"  # Default collection name

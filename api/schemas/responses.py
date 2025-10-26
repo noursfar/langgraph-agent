@@ -56,3 +56,61 @@ class HistoryResponse(BaseModel):
                 "error": None
             }
         }
+
+
+class DocumentUploadResponse(BaseModel):
+    """Response schema for document upload."""
+    success: bool = Field(..., description="Whether the operation succeeded")
+    filename: Optional[str] = Field(None, description="Name of uploaded file")
+    hr_id: Optional[str] = Field(None, description="Healthcare facility ID")
+    chunks_count: Optional[int] = Field(None, description="Number of chunks created")
+    error: Optional[str] = Field(None, description="Error message if failed")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "filename": "pratiquesoins.pdf",
+                "hr_id": "clinic_001",
+                "chunks_count": 45,
+                "error": None
+            }
+        }
+
+
+class DocumentDeleteResponse(BaseModel):
+    """Response schema for document deletion."""
+    success: bool = Field(..., description="Whether the operation succeeded")
+    filename: Optional[str] = Field(None, description="Name of deleted file")
+    hr_id: Optional[str] = Field(None, description="Healthcare facility ID")
+    error: Optional[str] = Field(None, description="Error message if failed")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "filename": "pratiquesoins.pdf",
+                "hr_id": "clinic_001",
+                "error": None
+            }
+        }
+
+
+class DocumentListResponse(BaseModel):
+    """Response schema for listing documents."""
+    success: bool = Field(..., description="Whether the operation succeeded")
+    hr_id: Optional[str] = Field(None, description="Healthcare facility ID")
+    documents: Optional[List[str]] = Field(None, description="List of document filenames")
+    total_chunks: Optional[int] = Field(None, description="Total number of chunks in collection")
+    error: Optional[str] = Field(None, description="Error message if failed")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "hr_id": "clinic_001",
+                "documents": ["pratiquesoins.pdf", "protocoles.pdf"],
+                "total_chunks": 120,
+                "error": None
+            }
+        }

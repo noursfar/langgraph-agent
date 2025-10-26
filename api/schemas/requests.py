@@ -26,3 +26,17 @@ class ChatRequest(BaseModel):
                 "message": "Quels sont les protocoles d'admission?"
             }
         }
+
+
+class DocumentDeleteRequest(BaseModel):
+    """Request schema for deleting a document."""
+    hrId: str = Field(..., description="Healthcare facility ID (collection name)")
+    filename: str = Field(..., description="Name of the file to delete")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "hrId": "clinic_001",
+                "filename": "pratiquesoins.pdf"
+            }
+        }
