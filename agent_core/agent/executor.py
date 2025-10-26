@@ -1,21 +1,20 @@
 # agent_core/agent/executor.py
 from langchain_core.messages import HumanMessage
 from langchain_community.chat_message_histories import SQLChatMessageHistory
-from agent_core.agent.base_agent import create_agent
 from agent_core.config.settings import settings
 from agent_core.utils.logger import log
 
 
-def run_agent(user_input, session_id):
+def run_agent(agent, user_input, session_id):
     """
     Run the agent with persistent conversation history.
 
     Args:
+        agent: Pre-initialized LangGraph agent instance
         user_input: The user's query
         session_id: Unique identifier for this conversation session
     """
     try:
-        agent = create_agent()
         log.info("Running LangGraph agent with user input: %s", user_input)
 
         # Initialize persistent chat history
@@ -56,16 +55,16 @@ def run_agent(user_input, session_id):
         return {"error": str(e)}
 
 
-def run_agent_streaming(user_input, session_id):
+def run_agent_streaming(agent, user_input, session_id):
     """Streaming version with persistent history."""
     try:
-        agent = create_agent()
         log.info("Running LangGraph agent (streaming) with user input: %s", user_input)
 
         # Initialize persistent chat history
         chat_history = SQLChatMessageHistory(
             session_id=session_id,
-            connection_string=settings.database_url
+            connection=settings.local_db_url,
+            table_name="history"
         )
 
         # Get existing messages

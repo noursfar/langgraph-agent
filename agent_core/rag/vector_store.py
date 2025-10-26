@@ -1,7 +1,7 @@
 # agent_core/rag/vector_store.py
 import chromadb
 from chromadb.config import Settings
-from agent_core.rag.config import CHROMA_PERSIST_DIR, COLLECTION_NAME
+from agent_core.rag.config import CHROMA_PERSIST_DIR
 from agent_core.utils.logger import log
 from agent_core.utils.exceptions import AgentToolError
 
@@ -9,7 +9,7 @@ from agent_core.utils.exceptions import AgentToolError
 class VectorStore:
     """ChromaDB vector store for document embeddings."""
 
-    def __init__(self, collection_name = COLLECTION_NAME):
+    def __init__(self, collection_name):
         """Initialize ChromaDB client and collection."""
         try:
             self.client = chromadb.PersistentClient(
@@ -49,17 +49,15 @@ class VectorStore:
         ids = []
 
         for idx, chunk in enumerate(chunks):
-            # Build metadata
-            metadata = {
-                "source": source_filename,
-                "chunk_index": idx,
-                "total_chunks": len(chunks),
-            }
-
-            # Include any existing metadata from the chunk
+            metadata = {}
             if hasattr(chunk, 'metadata') and chunk.metadata:
                 metadata.update(chunk.metadata)
 
+            metadata.update({
+                "source": source_filename,
+                "chunk_index": idx,
+                "total_chunks": len(chunks),
+            })
             metadatas.append(metadata)
 
             # Generate unique ID: filename + chunk index

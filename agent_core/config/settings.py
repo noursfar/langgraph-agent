@@ -26,11 +26,8 @@ class Settings(BaseSettings):
     local_db_url: str
 
     # OAuth2 Credentials
-    oauth_client_id: str
-    oauth_client_secret: str
-    oauth_username: str
-    oauth_password: str
-    oauth_grant_type: str = "password"
+    CLIENT_ID: str
+    CLIENT_SECRET: str
 
 
 settings = Settings()

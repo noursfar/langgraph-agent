@@ -9,7 +9,7 @@ from agent_core.rag.config import CHUNK_SIZE, CHUNK_OVERLAP
 from agent_core.utils.exceptions import IngestionError
 
 
-def ingest_document(file_path, collection_name="medical_documents"):
+def ingest_document(file_path, collection_name):
     try:
         # Initialize vector store
         vector_store = VectorStore(collection_name)

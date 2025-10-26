@@ -34,11 +34,9 @@ class OAuthManager:
                     settings.nearcare_oauth_url,
                     headers={"Content-Type": "application/x-www-form-urlencoded"},
                     data={
-                        "client_id": settings.oauth_client_id,
-                        "client_secret": settings.oauth_client_secret,
-                        "username": settings.oauth_username,
-                        "password": settings.oauth_password,
-                        "grant_type": settings.oauth_grant_type,
+                        "client_id": settings.CLIENT_ID,
+                        "client_secret": settings.CLIENT_SECRET,
+                        "grant_type": "client_credentials",
                     },
                 )
                 response.raise_for_status()
@@ -57,16 +55,8 @@ class OAuthManager:
                 )
                 return self.access_token
 
-        except httpx.HTTPStatusError as e:
-            msg = f"OAuth authentication failed: {e.response.status_code} - {e.response.text}"
-            log.error(msg)
-            raise AuthenticationError(msg) from e
-        except httpx.RequestError as e:
-            msg = f"OAuth request failed: {str(e)}"
-            log.error(msg)
-            raise AuthenticationError(msg) from e
-        except KeyError as e:
-            msg = f"Invalid OAuth response: missing {str(e)}"
+        except (httpx.HTTPStatusError, httpx.RequestError, KeyError) as e:
+            msg = f"OAuth error: {str(e)}"
             log.error(msg)
             raise AuthenticationError(msg) from e
 
