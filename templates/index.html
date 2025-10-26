@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HT AI Agent Platform</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcomePage" class="page active">
+        <div class="container">
+            <div class="welcome-card">
+                <div class="logo-section">
+                    <div class="logo-placeholder">
+                        <h1>HT LOGO</h1>
+                    </div>
+                    <h2 class="welcome-title">Welcome to AI Agent Platform</h2>
+                    <p class="welcome-subtitle">Your intelligent assistant for healthcare data management</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="primary-btn" id="letsChatBtn">
+                        <i class="fas fa-comments"></i>
+                        <span>Let's Chat</span>
+                        <small>Start a conversation with the AI agent</small>
+                    </button>
+                    
+                    <button class="secondary-btn" id="addDocsBtn">
+                        <i class="fas fa-folder-plus"></i>
+                        <span>Add Documents</span>
+                        <small>Manage your document library</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize Page -->
+    <div id="initializePage" class="page">
+        <div class="container">
+            <div class="form-card">
+                <button class="back-btn" id="backToWelcomeFromInit">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                
+                <div class="form-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h2>Initialize Session</h2>
+                    <p>Please enter your credentials to start chatting</p>
+                </div>
+                
+                <form id="initializeForm">
+                    <div class="form-group">
+                        <label for="userId">
+                            <i class="fas fa-user"></i>
+                            User ID
+                        </label>
+                        <input 
+                            type="text" 
+                            id="userId" 
+                            name="userId" 
+                            placeholder="Enter your user ID" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="token">
+                            <i class="fas fa-key"></i>
+                            Authentication Token
+                        </label>
+                        <textarea 
+                            id="token" 
+                            name="token" 
+                            rows="4" 
+                            placeholder="Enter your authentication token" 
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="initializeBtn">
+                        <i class="fas fa-rocket"></i>
+                        Initialize Session
+                    </button>
+                </form>
+                
+                <div id="initError" class="error-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div id="chatPage" class="page">
+        <div class="chat-container">
+            <div class="chat-header">
+                <button class="back-btn" id="backToWelcomeFromChat">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="chat-header-info">
+                    <h2><i class="fas fa-robot"></i> AI Agent Chat</h2>
+                    <span class="session-id" id="sessionIdDisplay">Session: <span id="sessionIdText">-</span></span>
+                </div>
+                <button class="clear-chat-btn" id="clearChatBtn">
+                    <i class="fas fa-trash"></i>
+                    Clear Chat
+                </button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <i class="fas fa-robot"></i>
+                    <p>Hello! I'm your AI assistant. How can I help you today?</p>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <form id="chatForm">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Type your message here..." 
+                            rows="1"
+                        ></textarea>
+                        <button type="submit" class="send-btn" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents Page -->
+    <div id="documentsPage" class="page">
+        <div class="container">
+            <div class="documents-card">
+                <button class="back-btn" id="backToWelcomeFromDocs">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                
+                <div class="docs-header">
+                    <div>
+                        <h2><i class="fas fa-folder-open"></i> Document Management</h2>
+                        <p>Upload, view, and manage your documents</p>
+                    </div>
+                </div>
+                
+                <!-- HR ID Input Section -->
+                <div class="hr-id-section">
+                    <div class="form-group">
+                        <label for="hrId">
+                            <i class="fas fa-hospital"></i>
+                            Healthcare Facility ID (HR ID)
+                        </label>
+                        <div class="hr-id-input-group">
+                            <input 
+                                type="text" 
+                                id="hrId" 
+                                placeholder="Enter HR ID to manage documents" 
+                                required
+                            >
+                            <button class="load-docs-btn" id="loadDocsBtn">
+                                <i class="fas fa-sync-alt"></i>
+                                Load Documents
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upload Section -->
+                <div class="upload-section" id="uploadSection" style="display: none;">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload Document</h3>
+                    <form id="uploadForm">
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="fileInput" accept=".pdf" required>
+                            <label for="fileInput" class="file-upload-label">
+                                <i class="fas fa-file-pdf"></i>
+                                <span id="fileNameDisplay">Choose a PDF file or drag it here</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="upload-btn">
+                            <i class="fas fa-upload"></i>
+                            Upload Document
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Documents List -->
+                <div class="documents-list-section" id="documentsListSection" style="display: none;">
+                    <div class="list-header">
+                        <h3><i class="fas fa-list"></i> Documents</h3>
+                        <span class="docs-count" id="docsCount">0 documents (0 chunks)</span>
+                    </div>
+                    <div id="documentsList" class="documents-list">
+                        <!-- Documents will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="docsError" class="error-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

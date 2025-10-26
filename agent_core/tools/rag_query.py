@@ -7,7 +7,7 @@ from agent_core.utils.logger import log
 from agent_core.utils.exceptions import AgentToolError
 
 
-def retrieve_admin_info(question, collection="medical_documents"):
+def retrieve_admin_info(question, collection="clinic_1"):
     try:
         log.info("Running RAG query for question: %s", question)
 

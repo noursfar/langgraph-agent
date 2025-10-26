@@ -1,5 +1,5 @@
 # run_api.py
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_smorest import Api
 
@@ -32,6 +32,11 @@ def create_app():
     api.register_blueprint(chat_bp)
     api.register_blueprint(history_bp)
     api.register_blueprint(documents_bp)
+
+    # UI route
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
     return app
 
