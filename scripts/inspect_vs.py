@@ -12,7 +12,7 @@ def main():
     print("🔍 ChromaDB Inspection\n")
     print("=" * 60)
 
-    vs = VectorStore()
+    vs = VectorStore("clinic_1")
 
     # Total count
     total = vs.count()
