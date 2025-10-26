@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_smorest import Api
 
 from api.routes.chat import chat_bp
+from api.routes.history import history_bp
 from api.routes.initialize import initialize_bp
 
 
@@ -28,6 +29,7 @@ def create_app():
     # Register blueprints
     api.register_blueprint(initialize_bp)
     api.register_blueprint(chat_bp)
+    api.register_blueprint(history_bp)
 
     return app
 
