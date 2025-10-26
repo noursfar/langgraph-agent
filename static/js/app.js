@@ -32,7 +32,7 @@ function showToast(message, type = 'success') {
 }
 
 // ==================== Loading Overlay ====================
-function showLoading(message = 'Processing...') {
+function showLoading(message = 'Traitement en cours...') {
     const overlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
     loadingText.textContent = message;
@@ -72,11 +72,11 @@ document.getElementById('initializeForm').addEventListener('submit', async (e) =
     const token = document.getElementById('token').value.trim();
     
     if (!userId || !token) {
-        showError('initError', 'Please fill in all fields');
+        showError('initError', 'Veuillez remplir tous les champs');
         return;
     }
     
-    showLoading('Initializing session...');
+    showLoading('Initialisation de la session...');
     
     try {
         const response = await fetch(`${API_BASE_URL}/initialize`, {
@@ -92,18 +92,18 @@ document.getElementById('initializeForm').addEventListener('submit', async (e) =
         if (data.success && data.session_id) {
             currentSessionId = data.session_id;
             document.getElementById('sessionIdText').textContent = currentSessionId.substring(0, 8) + '...';
-            showToast('Session initialized successfully!');
+            showToast('Session initialisée avec succès !');
             showPage('chatPage');
             
             // Clear form
             document.getElementById('initializeForm').reset();
         } else {
-            throw new Error(data.error || 'Failed to initialize session');
+            throw new Error(data.error || 'Échec de l\'initialisation de la session');
         }
     } catch (error) {
         console.error('Initialize error:', error);
         showError('initError', error.message);
-        showToast('Failed to initialize session', 'error');
+        showToast('Échec de l\'initialisation de la session', 'error');
     } finally {
         hideLoading();
     }
@@ -115,7 +115,7 @@ document.getElementById('backToWelcomeFromInit').addEventListener('click', () =>
 });
 
 document.getElementById('backToWelcomeFromChat').addEventListener('click', () => {
-    if (confirm('Are you sure you want to leave the chat? Your session will be lost.')) {
+    if (confirm('Êtes-vous sûr de vouloir quitter la discussion ? Votre session sera perdue.')) {
         currentSessionId = null;
         showPage('welcomePage');
     }
@@ -208,7 +208,7 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
     if (!message) return;
     
     if (!currentSessionId) {
-        showToast('Session not initialized. Please initialize first.', 'error');
+        showToast('Session non initialisée. Veuillez d\'abord initialiser.', 'error');
         showPage('initializePage');
         return;
     }
@@ -244,13 +244,13 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
         if (data.success && data.response) {
             addMessage(data.response, false);
         } else {
-            throw new Error(data.error || 'Failed to get response');
+            throw new Error(data.error || 'Échec de l\'obtention de la réponse');
         }
     } catch (error) {
         console.error('Chat error:', error);
         hideTypingIndicator();
-        addMessage('Sorry, I encountered an error. Please try again.', false);
-        showToast('Failed to send message', 'error');
+        addMessage('Désolé, j\'ai rencontré une erreur. Veuillez réessayer.', false);
+        showToast('Échec de l\'envoi du message', 'error');
     } finally {
         // Re-enable input
         messageInput.disabled = false;
@@ -261,15 +261,15 @@ document.getElementById('chatForm').addEventListener('submit', async (e) => {
 
 // Clear chat
 document.getElementById('clearChatBtn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear the chat history?')) {
+    if (confirm('Êtes-vous sûr de vouloir effacer l\'historique de la discussion ?')) {
         const messagesContainer = document.getElementById('chatMessages');
         messagesContainer.innerHTML = `
             <div class="welcome-message">
                 <i class="fas fa-robot"></i>
-                <p>Hello! I'm your AI assistant. How can I help you today?</p>
+                <p>Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider aujourd'hui ?</p>
             </div>
         `;
-        showToast('Chat cleared');
+        showToast('Discussion effacée');
     }
 });
 
@@ -280,22 +280,22 @@ document.getElementById('loadDocsBtn').addEventListener('click', async () => {
     const hrId = document.getElementById('hrId').value.trim();
     
     if (!hrId) {
-        showToast('Please enter an HR ID', 'error');
+        showToast('Veuillez entrer un HR ID', 'error');
         return;
     }
     
     currentHrId = hrId;
-    showLoading('Loading documents...');
+    showLoading('Chargement des documents...');
     
     try {
         await loadDocuments(hrId);
         document.getElementById('uploadSection').style.display = 'block';
         document.getElementById('documentsListSection').style.display = 'block';
-        showToast('Documents loaded successfully');
+        showToast('Documents chargés avec succès');
     } catch (error) {
         console.error('Load documents error:', error);
         showError('docsError', error.message);
-        showToast('Failed to load documents', 'error');
+        showToast('Échec du chargement des documents', 'error');
     } finally {
         hideLoading();
     }
@@ -309,7 +309,7 @@ async function loadDocuments(hrId) {
         if (data.success) {
             displayDocuments(data.documents || [], data.total_chunks || 0);
         } else {
-            throw new Error(data.error || 'Failed to load documents');
+            throw new Error(data.error || 'Échec du chargement des documents');
         }
     } catch (error) {
         throw error;
@@ -320,13 +320,13 @@ function displayDocuments(documents, totalChunks) {
     const documentsList = document.getElementById('documentsList');
     const docsCount = document.getElementById('docsCount');
     
-    docsCount.textContent = `${documents.length} document${documents.length !== 1 ? 's' : ''} (${totalChunks} chunks)`;
+    docsCount.textContent = `${documents.length} document${documents.length !== 1 ? 's' : ''} (${totalChunks} fragments)`;
     
     if (documents.length === 0) {
         documentsList.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-folder-open"></i>
-                <p>No documents found. Upload your first document!</p>
+                <p>Aucun document trouvé. Téléchargez votre premier document !</p>
             </div>
         `;
         return;
@@ -340,12 +340,12 @@ function displayDocuments(documents, totalChunks) {
                 </div>
                 <div class="document-details">
                     <h4>${doc}</h4>
-                    <p>PDF Document</p>
+                    <p>Document PDF</p>
                 </div>
             </div>
             <button class="delete-doc-btn" onclick="deleteDocument('${doc}')">
                 <i class="fas fa-trash"></i>
-                Delete
+                Supprimer
             </button>
         </div>
     `).join('');
@@ -395,21 +395,21 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     const file = fileInput.files[0];
     
     if (!file) {
-        showToast('Please select a file', 'error');
+        showToast('Veuillez sélectionner un fichier', 'error');
         return;
     }
     
     if (!currentHrId) {
-        showToast('Please enter and load an HR ID first', 'error');
+        showToast('Veuillez d\'abord entrer et charger un HR ID', 'error');
         return;
     }
     
     if (!file.name.toLowerCase().endsWith('.pdf')) {
-        showToast('Only PDF files are allowed', 'error');
+        showToast('Seuls les fichiers PDF sont autorisés', 'error');
         return;
     }
     
-    showLoading('Uploading document...');
+    showLoading('Téléchargement du document...');
     
     try {
         const formData = new FormData();
@@ -424,21 +424,21 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         const data = await response.json();
         
         if (data.success) {
-            showToast(`Document uploaded successfully! (${data.chunks_count} chunks)`);
+            showToast(`Document téléchargé avec succès ! (${data.chunks_count} fragments)`);
             
             // Reset form
             document.getElementById('uploadForm').reset();
-            fileNameDisplay.innerHTML = '<i class="fas fa-file-pdf"></i> Choose a PDF file or drag it here';
+            fileNameDisplay.innerHTML = '<i class="fas fa-file-pdf"></i> Choisissez un fichier PDF ou glissez-le ici';
             
             // Reload documents
             await loadDocuments(currentHrId);
         } else {
-            throw new Error(data.error || 'Failed to upload document');
+            throw new Error(data.error || 'Échec du téléchargement du document');
         }
     } catch (error) {
         console.error('Upload error:', error);
         showError('docsError', error.message);
-        showToast('Failed to upload document', 'error');
+        showToast('Échec du téléchargement du document', 'error');
     } finally {
         hideLoading();
     }
@@ -446,16 +446,16 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
 
 // Delete document
 async function deleteDocument(filename) {
-    if (!confirm(`Are you sure you want to delete "${filename}"?`)) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${filename}" ?`)) {
         return;
     }
     
     if (!currentHrId) {
-        showToast('HR ID not set', 'error');
+        showToast('HR ID non défini', 'error');
         return;
     }
     
-    showLoading('Deleting document...');
+    showLoading('Suppression du document...');
     
     try {
         const response = await fetch(`${API_BASE_URL}/documents`, {
@@ -472,15 +472,15 @@ async function deleteDocument(filename) {
         const data = await response.json();
         
         if (data.success) {
-            showToast('Document deleted successfully');
+            showToast('Document supprimé avec succès');
             await loadDocuments(currentHrId);
         } else {
-            throw new Error(data.error || 'Failed to delete document');
+            throw new Error(data.error || 'Échec de la suppression du document');
         }
     } catch (error) {
         console.error('Delete error:', error);
         showError('docsError', error.message);
-        showToast('Failed to delete document', 'error');
+        showToast('Échec de la suppression du document', 'error');
     } finally {
         hideLoading();
     }
