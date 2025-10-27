@@ -25,8 +25,6 @@ RUN pip install --upgrade pip && \
 # Copy application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p data/chroma_db data/documents
 
 # Expose port 5000
 EXPOSE 5000
